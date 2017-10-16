@@ -80,8 +80,8 @@
 						});
 						markers[i].setMap(map);
 						google.maps.event.addListener(markers[i], 'click', function() {
-						infowindow.setContent(markers[i].title);
-						infowindow.open(map, markers[i]);
+						infowindow.setContent(this.title);
+						infowindow.open(map, this);
 				})
 					}
 				}
@@ -94,3 +94,5 @@
  		map.panTo(loc);
 
 	}
+
+

@@ -14,7 +14,10 @@
 	var people;
 	var landmarks;
 	var markers = [];
-
+	var landmarkers = [];
+	var personIcon = 'person.png';
+	var landmarkIcon = 'castle.png';
+	var yourIcon = 'youarehere.png';
 
 	function init()
 	{
@@ -47,7 +50,8 @@
 		        console.log(map);
 				marker = new google.maps.Marker({
 						position: loc,
-						title: "Your Location"
+						title: "Your Location",
+						icon: yourIcon
 				});
 				marker.setMap(map);
 				google.maps.event.addListener(marker, 'click', function() {
@@ -76,23 +80,42 @@
 			        	markers[i] = {};
 						markers[i] = new google.maps.Marker({
 							position: new google.maps.LatLng(people[i].lat,people[i].lng),
-							title: people[i].login
+							title: people[i].login,
+							icon: personIcon
 						});
 						markers[i].setMap(map);
 						google.maps.event.addListener(markers[i], 'click', function() {
 						infowindow.setContent(this.title);
 						infowindow.open(map, this);
-				})
+						})
+
+			
 					}
 				}
-			}
+				for (i = 0; i < landmarks.length; i++) {
+					landmarkers[i] = {};
+					landmarkers[i] = new google.maps.Marker({
+						position: new google.maps.LatLng(landmarks[i].geometry.coordinates[1], landmarks[i].geometry.coordinates[0]),
+						title: landmarks[i].properties.Location_Name,
+						icon: landmarkIcon
+					});
+					console.log(landmarkers[i].title);	
+					landmarkers[i].setMap(map);
+					google.maps.event.addListener(landmarkers[i], 'click', function() {
+						infowindow.setContent(this.title);
+						infowindow.open(map, this);
+					})
+
+				}
+				console.log(landmarkers);
+
+
 		}
 
-
+		}
 		request.send(userData); 
 
  		map.panTo(loc);
-
 	}
 
 

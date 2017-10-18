@@ -8,6 +8,10 @@
 		center: loc,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
+	var closestLandmark = {
+		distance: 1000000,
+		name: "No landmarks nearby",
+	}
     var map;
 	var marker;
 	var infowindow = new google.maps.InfoWindow();
@@ -18,6 +22,7 @@
 	var personIcon = 'person.png';
 	var landmarkIcon = 'castle.png';
 	var yourIcon = 'youarehere.png';
+	var myContent;
 
 	function init()
 	{
@@ -42,25 +47,20 @@
 	}
 
 	function renderMap(){
-				loc = new google.maps.LatLng(lat, lng);
+		loc = new google.maps.LatLng(lat, lng);
+        console.log("rendering map with location" + loc);
+        console.log(map);
+		marker = new google.maps.Marker({
+			position: loc,
+			title: "Your Location",
+			icon: yourIcon
+		});
+		marker.setMap(map);
 
-		       
-
-		        console.log("rendering map with location" + loc);
-		        console.log(map);
-				marker = new google.maps.Marker({
-						position: loc,
-						title: "Your Location",
-						icon: yourIcon
-				});
-				marker.setMap(map);
-				google.maps.event.addListener(marker, 'click', function() {
-						infowindow.setContent(marker.title);
-						infowindow.open(map, marker);
-				})
 
 		request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 		userData = "login=O6VNCD83&lat=" + lat + "&lng=" + lng;
+		console.log(userData);
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		request.onreadystatechange = function() {
@@ -71,10 +71,7 @@
 				people = data.people;
 				console.log(data.people);
 				landmarks = data.landmarks;
-				console.log(people);
-				console.log(landmarks);
-
-
+				var theirLatLng;
 		        for(i = 0; i < people.length; i++) {
 		        	if(people[i].lat != lat && people[i].lng != lng){
 			        	markers[i] = {};
@@ -83,15 +80,17 @@
 							title: people[i].login,
 							icon: personIcon
 						});
+						theirLatLng = new google.maps.LatLng(people[i].lat,people[i].lng);
 						markers[i].setMap(map);
+						distance = google.maps.geometry.spherical.computeDistanceBetween(loc, theirLatLng);
+						var content = "<h4>" + markers[i].title + "</h4><body><p>Distance away: " + distance/1609.34 + " miles</p></body>";
 						google.maps.event.addListener(markers[i], 'click', function() {
-						infowindow.setContent(this.title);
-						infowindow.open(map, this);
-						})
-
-			
+							infowindow.setContent(content);
+							infowindow.open(map, this);
+						});
 					}
 				}
+
 				for (i = 0; i < landmarks.length; i++) {
 					landmarkers[i] = {};
 					landmarkers[i] = new google.maps.Marker({
@@ -99,23 +98,49 @@
 						title: landmarks[i].properties.Location_Name,
 						icon: landmarkIcon
 					});
-					console.log(landmarkers[i].title);	
+
+					distance = google.maps.geometry.spherical.computeDistanceBetween(loc, landmarkers[i].position);
+					console.log(distance);
+					if (distance < closestLandmark.distance) {
+						console.log("found a smaller one");
+						closestLandmark.distance = distance;
+						closestLandmark.name = landmarks[i].properties.Location_Name;
+						console.log(closestLandmark.distance);
+					    var polyLine = new google.maps.Polyline({
+				          	path: [loc, landmarkers[i].position],
+				          	geodesic: true,
+				          	strokeColor: '#FF0000',
+				          	strokeOpacity: 1.0,
+				          	strokeWeight: 2
+					    });
+					    polyLine.setMap(map);
+					}
+
+					var details = landmarks[i].properties.Details;
 					landmarkers[i].setMap(map);
 					google.maps.event.addListener(landmarkers[i], 'click', function() {
-						infowindow.setContent(this.title);
+						infowindow.setContent(details);
 						infowindow.open(map, this);
 					})
 
 				}
-				console.log(landmarkers);
+			}
+	 			myContent = "<body><p> Closest Landmark is " + closestLandmark.name + " \n" + closestLandmark.distance/1609.34 + " miles away</p></body>";
 
-
-		}
+	 			google.maps.event.addListener(marker, 'click', function() {
+				infowindow.setContent(myContent);
+				infowindow.open(map, marker);
+				})
 
 		}
 		request.send(userData); 
 
  		map.panTo(loc);
+ 		infowindow.setContent("O6VNCD83");
+ 		infowindow.open(map,marker);
+
+
+
 	}
 
 

@@ -1,4 +1,3 @@
-	console.log("starting javascript");
 	var request = new XMLHttpRequest(); 
 	var lat = 0;
 	var lng = 0; 
@@ -26,15 +25,12 @@
 
 	function init()
 	{
-		console.log("init map");
 		map = new google.maps.Map(document.getElementById("map"), options); 
 		getLocation();
 	}
 
 	function getLocation(){
-		console.log("Getting Location");
 		if (navigator.geolocation) {
-            console.log("got location");
 			navigator.geolocation.getCurrentPosition(function(position) {
 				lat = position.coords.latitude;
 				lng = position.coords.longitude; 
@@ -48,8 +44,6 @@
 
 	function renderMap(){
 		loc = new google.maps.LatLng(lat, lng);
-        console.log("rendering map with location" + loc);
-        console.log(map);
 		marker = new google.maps.Marker({
 			position: loc,
 			title: "Your Location",
@@ -60,7 +54,6 @@
 
 		request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 		userData = "login=O6VNCD83&lat=" + lat + "&lng=" + lng;
-		console.log(userData);
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		request.onreadystatechange = function() {
@@ -69,7 +62,6 @@
 				rawData = request.responseText;
 				data = JSON.parse(rawData);
 				people = data.people;
-				console.log(data.people);
 				landmarks = data.landmarks;
 				var theirLatLng;
 		        for(i = 0; i < people.length; i++) {
@@ -100,12 +92,9 @@
 					});
 
 					distance = google.maps.geometry.spherical.computeDistanceBetween(loc, landmarkers[i].position);
-					console.log(distance);
 					if (distance < closestLandmark.distance) {
-						console.log("found a smaller one");
 						closestLandmark.distance = distance;
 						closestLandmark.name = landmarks[i].properties.Location_Name;
-						console.log(closestLandmark.distance);
 					    var polyLine = new google.maps.Polyline({
 				          	path: [loc, landmarkers[i].position],
 				          	geodesic: true,
@@ -125,7 +114,7 @@
 
 				}
 			}
-	 			myContent = "<body><p> Closest Landmark is " + closestLandmark.name + " \n" + closestLandmark.distance/1609.34 + " miles away</p></body>";
+	 			myContent = "<body><p> Closest Landmark is " + closestLandmark.name + "</p><p>" + closestLandmark.distance/1609.34 + " miles away</p></body>";
 
 	 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.setContent(myContent);

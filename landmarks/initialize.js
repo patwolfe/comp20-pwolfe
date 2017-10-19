@@ -65,21 +65,15 @@
 				landmarks = data.landmarks;
 				var theirLatLng;
 		        for(i = 0; i < people.length; i++) {
-		        	if(people[i].lat != lat && people[i].lng != lng){
+		        	if(people[i].login != "O6VNCD83"){
 			        	markers[i] = {};
 						markers[i] = new google.maps.Marker({
 							position: new google.maps.LatLng(people[i].lat,people[i].lng),
 							title: people[i].login,
 							icon: personIcon
 						});
-						theirLatLng = new google.maps.LatLng(people[i].lat,people[i].lng);
 						markers[i].setMap(map);
-						distance = google.maps.geometry.spherical.computeDistanceBetween(loc, theirLatLng);
-						var content = "<h4>" + markers[i].title + "</h4><body><p>Distance away: " + distance/1609.34 + " miles</p></body>";
-						google.maps.event.addListener(markers[i], 'click', function() {
-							infowindow.setContent(content);
-							infowindow.open(map, this);
-						});
+						sentListenerPM(people[i], markers[i])
 					}
 				}
 
@@ -104,22 +98,16 @@
 					    });
 					    polyLine.setMap(map);
 					}
-
-					var details = landmarks[i].properties.Details;
 					landmarkers[i].setMap(map);
-					google.maps.event.addListener(landmarkers[i], 'click', function() {
-						infowindow.setContent(details);
-						infowindow.open(map, this);
-					})
-
+					sentListenerLM(landmarks[i], landmarkers[i]);
 				}
 			}
-	 			myContent = "<body><p><b>Your Location</b></p><p> Closest Landmark is " + closestLandmark.name + "</p><p>" + closestLandmark.distance/1609.34 + " miles away</p></body>";
+ 			myContent = "<body><p><b>Your Location</b></p><p> Closest Landmark is " + closestLandmark.name + "</p><p>" + closestLandmark.distance/1609.34 + " miles away</p></body>";
 
-	 			google.maps.event.addListener(marker, 'click', function() {
-				infowindow.setContent(myContent);
-				infowindow.open(map, marker);
-				})
+ 			google.maps.event.addListener(marker, 'click', function() {
+			infowindow.setContent(myContent);
+			infowindow.open(map, marker);
+			})
 
 		}
 		request.send(userData); 
@@ -130,6 +118,25 @@
 
 
 
+	}
+
+	function sentListenerLM(landmark, landmarker){
+		var details = landmark.properties.Details;
+		google.maps.event.addListener(landmarker, 'click', function() {
+							infowindow.setContent(details);
+							infowindow.open(map, this);
+		})					
+	}
+
+
+	function sentListenerPM(person, marker){
+		var theirLatLng = new google.maps.LatLng(person.lat, person.lng);
+		distance = google.maps.geometry.spherical.computeDistanceBetween(loc, theirLatLng);
+		var content = "<h4>" + marker.title + "</h4><body><p>Distance away: " + distance/1609.34 + " miles</p></body>";
+		google.maps.event.addListener(marker, 'click', function() {
+							infowindow.setContent(content);
+							infowindow.open(map, this);
+		})					
 	}
 
 

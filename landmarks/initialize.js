@@ -114,7 +114,7 @@
 
 				}
 			}
-	 			myContent = "<body><p> Closest Landmark is " + closestLandmark.name + "</p><p>" + closestLandmark.distance/1609.34 + " miles away</p></body>";
+	 			myContent = "<body><p><b>Your Location</b></p><p> Closest Landmark is " + closestLandmark.name + "</p><p>" + closestLandmark.distance/1609.34 + " miles away</p></body>";
 
 	 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.setContent(myContent);

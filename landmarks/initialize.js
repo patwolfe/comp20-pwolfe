@@ -8,7 +8,7 @@
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 	var closestLandmark = {
-		distance: 1000000,
+		distance: 10000000000,
 		name: "No landmarks nearby",
 	}
     var map;
@@ -51,14 +51,12 @@
 		});
 		marker.setMap(map);
 
-
 		request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 		userData = "login=O6VNCD83&lat=" + lat + "&lng=" + lng;
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		request.onreadystatechange = function() {
 			if (request.readyState == 4 && request.status == 200) {
-				//if request is successful, save parsed json data in arrays 
 				rawData = request.responseText;
 				data = JSON.parse(rawData);
 				people = data.people;
@@ -76,7 +74,6 @@
 						sentListenerPM(people[i], markers[i])
 					}
 				}
-
 				for (i = 0; i < landmarks.length; i++) {
 					landmarkers[i] = {};
 					landmarkers[i] = new google.maps.Marker({
@@ -86,6 +83,7 @@
 					});
 
 					distance = google.maps.geometry.spherical.computeDistanceBetween(loc, landmarkers[i].position);
+
 					if (distance < closestLandmark.distance) {
 						closestLandmark.distance = distance;
 						closestLandmark.name = landmarks[i].properties.Location_Name;
@@ -115,9 +113,6 @@
  		map.panTo(loc);
  		infowindow.setContent("O6VNCD83");
  		infowindow.open(map,marker);
-
-
-
 	}
 
 	function sentListenerLM(landmark, landmarker){
@@ -127,7 +122,6 @@
 							infowindow.open(map, this);
 		})					
 	}
-
 
 	function sentListenerPM(person, marker){
 		var theirLatLng = new google.maps.LatLng(person.lat, person.lng);

@@ -1,4 +1,9 @@
-1. I believe all the requirements have been successfully implemented
+1. I believe all the requirements have been successfully implemented.
+I realized after pushing that the commit message about citations 
+in the readme and adding addListener functions was probably too 
+long, so in the future I will try to avoid that. I tried 
+to commit every time I added a major feature or fixed a bug,
+I apologize if more commits were expected.  
 
 2. I recieved TA help when I encountered an issue where the map 
 was not being displayed after initialization and learned it

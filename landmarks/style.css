@@ -5,7 +5,12 @@ html, body{
 
 }
 
+p {
+	font-family: Helvetica;
+}
+
 #map{
 	height: 100%;
 	width: 100%;
 }
+

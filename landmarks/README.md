@@ -9,8 +9,7 @@ I apologize if more commits were expected.
 was not being displayed after initialization and learned it
 was because the css file was not set up properly. I also
 used the internet to learn about using the keyword
-"this" within for loops (seen when iterating through
-landmarks and people arrays).
+"this" within when referring to a parameter within a function
 Additionally, I used the geolocation_map.html and create_map.js
 files on Ming's github to get an idea 
 of how to render a map on an HTML page for the javascript on the page. 

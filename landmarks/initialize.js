@@ -10,7 +10,7 @@
 	var closestLandmark = {
 		distance: 10000000000,
 		name: "No landmarks nearby",
-	}
+	};
     var map;
 	var marker;
 	var infowindow = new google.maps.InfoWindow();

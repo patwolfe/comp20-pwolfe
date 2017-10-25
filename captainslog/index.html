@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        // Your work will be done here...
+
+        $(document).ready(function(){
+            $('#msg').keypress(function (e){
+                if (e.which == 13) {
+                    val = $('#msg').val();
+                    $('#msg').val("");
+                    console.log(val);
+
+                }
+            })
+        })
+
     </script>
 </head>
 

@@ -51,7 +51,7 @@
 		});
 		marker.setMap(map);
 
-		request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+		request.open("POST", "https://protected-oasis-56188.herokuapp.com/sendLocation", true);
 		userData = "login=O6VNCD83&lat=" + lat + "&lng=" + lng;
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Assignment 4: Security</title>
+</head>
+<body>
+<h1>Assignment 4: Security</h1>
+<h2>Patrick Wolfe</h2>
+<h3>Introduction</h3>
+<p>
+The product is a geolocation based app that can 
+take a user's location and return landmarks
+nearby to that user as well as other users 
+that have logged into the app and their locations. 
+I have been hired to examine the app for any 
+potential security vulnerabilities. 	
+</p>
+
+<h3>Methodology</h3>
+<p>
+First I attempted to look for any vulnerabilites 
+using black box testing. This meant accessing 
+the app without looking at the actual source code. 
+I used the Postman application to send POST requests
+and for GET requests simply used the address
+bar in my browser. After that I looked at the source
+code for the application by cloning the 
+heroku app using git which allowed me to take 
+a closer look at how the app works in order 
+to pinpoint possible sources of vulnerabilities. 
+</p>
+
+<h3>Abstract of Findings</h3>
+<p>
+	
+</p>
+
+<h3>Issues Found</h3>
+<p>
+<li>Cross Site Scripting vulnerability in '/sendLocation POST' request</li>
+<p>Severity: high - can completely destroy functionality for '/' GET request that displays checkins.</p>
+<p></p>
+
+<br />
+<li>Mongo Injection vulnerability in '/checkins.json' GET request/</li>
+<p>Severity: medium - this will not destroy functionality for any aspect of the app but it is a serious privacy concern as a user can view all the information for users in the database without knowning their logins.</p>
+
+
+<li></li>
+</p>
+
+<h3>Conclusion</h3>
+<p>
+These vulnerabilities can be removed using good security practices. HTML encoding the login string will prevent the user from inserting
+JavaScript into the database, which will then cause issues when the logins are displayed in HTML. This can be done by writing a 
+basic JavaScript function that takes a string as a parameter and returns the same string except with '<' and '>' encoded 
+to '& lt;' and '& gt;' respectively (with no space following the &). This will cause logins with those characters to appear the 
+same to the user, but HTML will not look at them as tags so &lt;script&gt; cannot be inserted into the page.
+</p>
+
+<h3>References</h3>
+<p>XSS: <a href='https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)'>https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)</a></p>
+<p>Mongo injection: <a href='https://www.owasp.org/index.php/Testing_for_NoSQL_injection'>https://www.owasp.org/index.php/Testing_for_NoSQL_injection</a></p>
+
+</body>
+</html>

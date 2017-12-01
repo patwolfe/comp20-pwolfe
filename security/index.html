@@ -57,10 +57,22 @@ basic JavaScript function that takes a string as a parameter and returns the sam
 to '& lt;' and '& gt;' respectively (with no space following the &). This will cause logins with those characters to appear the 
 same to the user, but HTML will not look at them as tags so &lt;script&gt; cannot be inserted into the page.
 </p>
+<p>
+The MongoDB injection can be prevented by validating the data in the query. We can do this using a library such as Joi or by 
+making sure the query is the in the format we expect manually by writing JavaScript functions to validate the query 
+and prevent returning data the user should not have access to. 
+</p>
+
+<p>
+
+It's likely that new vulnerabilities will be discovered in the app so we need to be proactive in looking for them and solving them before they 
+cause major problems for our users.
+</p>
 
 <h3>References</h3>
 <p>XSS: <a href='https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)'>https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)</a></p>
 <p>Mongo injection: <a href='https://www.owasp.org/index.php/Testing_for_NoSQL_injection'>https://www.owasp.org/index.php/Testing_for_NoSQL_injection</a></p>
+<p>Preventing Malicious Queries: <a href="https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js/"></a> https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js/</p>
 
 </body>
 </html>

@@ -2,11 +2,12 @@
 <html>
 <head>
 	<title>Assignment 4: Security</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Assignment 4: Security</h1>
 <h2>Patrick Wolfe</h2>
-<h3>Introduction</h3>
+<h2>Introduction</h2>
 <p>
 The product is a geolocation based app that can 
 take a user's location and return landmarks
@@ -16,7 +17,7 @@ I have been hired to examine the app for any
 potential security vulnerabilities. 	
 </p>
 
-<h3>Methodology</h3>
+<h2>Methodology</h2>
 <p>
 First I attempted to look for any vulnerabilites 
 using black box testing. This meant accessing 
@@ -30,49 +31,84 @@ a closer look at how the app works in order
 to pinpoint possible sources of vulnerabilities. 
 </p>
 
-<h3>Abstract of Findings</h3>
+<h2>Abstract of Findings</h2>
 <p>
-	
+Three security issues I found were cross site scripting, Mongo injections, and 
+the ability to input non numeric values as lat and lng. Cross site scripting allows
+users to inject malicious JavaScript into the database which then 
+will activate when the logins are displayed. This is bad because it allows
+people who are not developers to change our app in unexpected ways. MongoDB injections
+allow users to submit queries for accounts they should not have access to. This is an
+issue because it can allow a malicious user to access sensitive information about 
+other users' or admins' accounts. 
 </p>
 
-<h3>Issues Found</h3>
+<h2>Issues Found</h2>
 <p>
-<li>Cross Site Scripting vulnerability in '/sendLocation POST' request</li>
-<p>Severity: high - can completely destroy functionality for '/' GET request that displays checkins.</p>
-<p></p>
-
+<li class = "issue">Cross Site Scripting vulnerability in '/sendLocation' POST request</li>
+<p>Severity: high - can completely destroy functionality for '/' GET request that displays checkins and anything else
+that displays the information returned in JSON form in an HTML page.</p>
+<p>This issue happens when a user inputs JavaScript as their login in the POST request. 
+When the logins from the database are displayed
+in HTML, the JavaScript runs which can allow the 
+page to be manipulated in a variety of malicious ways, including displaying outside images or even 
+redirecting to a completely different page.</p>
+<p>Proof: Here's an example of a POST request containing JavaScript: <br /> <img src="XSSPost.JPG" alt = "picture of POST request in Postman with
+JavaScript in the login"><br /> And here's what happens when we try 
+to access the page with all the checkins: <br />
+<img src="htmlPostXSS.JPG" alt="HTML page with an alert that says 'XSS'">
 <br />
-<li>Mongo Injection vulnerability in '/checkins.json' GET request/</li>
-<p>Severity: medium - this will not destroy functionality for any aspect of the app but it is a serious privacy concern as a user can view all the information for users in the database without knowning their logins.</p>
-
-
-<li></li>
-</p>
-
-<h3>Conclusion</h3>
-<p>
-These vulnerabilities can be removed using good security practices. HTML encoding the login string will prevent the user from inserting
+The alert occurs because the JavaScript has been run</p>
+<p>Resolution: HTML encoding (on the server side) the login string will prevent the user from inserting
 JavaScript into the database, which will then cause issues when the logins are displayed in HTML. This can be done by writing a 
 basic JavaScript function that takes a string as a parameter and returns the same string except with '<' and '>' encoded 
 to '& lt;' and '& gt;' respectively (with no space following the &). This will cause logins with those characters to appear the 
-same to the user, but HTML will not look at them as tags so &lt;script&gt; cannot be inserted into the page.
+same to the user, but HTML will not look at them as tags so &lt;script&gt; cannot be inserted into the page.</p>
+<br />
+
+
+<li class = "issue">Mongo Injection vulnerability in '/checkins.json' GET request/</li>
+<p>Severity: medium - this will not destroy functionality for any aspect of the app but it is a serious privacy concern as a user can view all the information for users in the database without knowning their logins.</p>
+<p>Proof:This is the result of inputting login[$ne]='' as the query for the '/checkins.json' GET request
+	<br/><img src="mongoInjection.JPG" alt = "picture of the result of inputting logins[$ne]=''"><br />
+<br />
+The information for all users in the database is displayed by querying for logins not equal to a null string</p>
+<p>Resolution: This can be done by sanitizing user input on the server side. The reason for doing it on the server side is that 
+if it is done on the client side, a web proxy could be used to intercept the request and alter the query. Sanitizing 
+user input means removing any keys that start with '$'. This will prevent malicious queries that could lead 
+to users accessing information they should not have access to. This should be done in the 'checkins.json' GET request by
+checking the login in the request and making sure it does not have a leading '$'.
 </p>
-<p>
-The MongoDB injection can be prevented by validating the data in the query. We can do this using a library such as Joi or by 
-making sure the query is the in the format we expect manually by writing JavaScript functions to validate the query 
-and prevent returning data the user should not have access to. 
+
+<br />
+
+<li class = "issue">
+Ability to input non numerical values as lat and lng in '/sendLocation' API
+</li>
+<p>Severity: medium - this also will not break the app but it can cause issues with compatibility if 
+it is assumed that the lat and lng values for users that have successfully checked in are valid lat/lng values</p>
+<p>Proof:This an example of a POST request with non numerical values for lat and lng 
+	<br/><img src="nonvalidatedPost.JPG" alt = "picture of post request with strings inputted for lat and lng"><br />
+	This is the result<br /> <img src="resultofInvalidInput.JPG" alt = "checkins listed in index with NaN as lat and lng">
+Since "patrick" is not a number, toFloat() returned NaN and that was set as the value for lat.</p>
+<p>Resolution: The fix for this is very simple. We can just check if lat or lng is equal to NaN with a 
+	basic conditional and return an error to the user if one is NaN, making sure not to insert
+	the problematic document into the users collection in our MongoDB.
 </p>
+<h2>Conclusion</h2>
 
 <p>
-
-It's likely that new vulnerabilities will be discovered in the app so we need to be proactive in looking for them and solving them before they 
-cause major problems for our users.
+These vulnerabilities can be removed using good security practices and will not cost very much to solve. 
+However, it's likely that new vulnerabilities will be discovered in the
+app so we need to be proactive in looking for them and solving them before they 
+cause major problems for our users. My reccommendation would be to hire at least one employee for a cyber security based position. 
+The median salary of an Information Secutiry analysis is $90,000 USD so a reasonable expectation for the future cost is about that much. 
 </p>
 
-<h3>References</h3>
+<h2>References</h2>
 <p>XSS: <a href='https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)'>https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)</a></p>
 <p>Mongo injection: <a href='https://www.owasp.org/index.php/Testing_for_NoSQL_injection'>https://www.owasp.org/index.php/Testing_for_NoSQL_injection</a></p>
-<p>Preventing Malicious Queries: <a href="https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js/"></a> https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js/</p>
+<p>Preventing Malicious Queries: <a href="https://zanon.io/posts/nosql-injection-in-mongodb"> https://zanon.io/posts/nosql-injection-in-mongodb</a></p>
 
 </body>
 </html>

@@ -1,0 +1,15 @@
+p {
+	font-family: Helvetica; 
+	font-size: 16px;
+}
+
+.issue
+{
+	font-family: Helvetica; 
+	font-size: 18px;
+	font-weight: bold;
+}
+
+h1, h2 {
+	font-family: Helvetica;
+}

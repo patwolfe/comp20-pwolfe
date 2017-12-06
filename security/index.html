@@ -85,7 +85,7 @@ checking the login in the request and making sure it does not have a leading '$'
 <li class = "issue">
 Ability to input non numerical values as lat and lng in '/sendLocation' API
 </li>
-<p>Severity: medium - this also will not break the app but it can cause issues with compatibility if 
+<p>Severity: low - this also will not break the app but it can cause issues with compatibility if 
 it is assumed that the lat and lng values for users that have successfully checked in are valid lat/lng values</p>
 <p>Proof:This an example of a POST request with non numerical values for lat and lng 
 	<br/><img src="nonvalidatedPost.JPG" alt = "picture of post request with strings inputted for lat and lng"><br />

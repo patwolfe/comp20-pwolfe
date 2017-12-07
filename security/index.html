@@ -92,7 +92,7 @@ it is assumed that the lat and lng values for users that have successfully check
 	This is the result<br /> <img src="resultofInvalidInput.JPG" alt = "checkins listed in index with NaN as lat and lng">
 Since "patrick" is not a number, toFloat() returned NaN and that was set as the value for lat.</p>
 <p>Resolution: The fix for this is very simple. We can just check if lat or lng is equal to NaN with a 
-	basic conditional and return an error to the user if one is NaN, making sure not to insert
+	basic conditional in the '/sendLocation' POST request on the server side and return an error to the user if one is NaN, making sure not to insert
 	the problematic document into the users collection in our MongoDB.
 </p>
 <h2>Conclusion</h2>
